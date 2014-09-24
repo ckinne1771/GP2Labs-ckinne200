@@ -24,10 +24,22 @@ void InitWindow(int width, int height, bool fullscreen){
 }
 //The cleanup method. This i used to clean up memory once we exit the game loop.
 void CleanUp(){
-
+	SDL_DestroyWindow(window); //clears up the memory allocated to call and create the window.
+	SDL_Quit(); //clears up the memory allocated to initialise the SDL library.
 }
 
 //The main method. This is the entry point for the project.
 int main(int argc, char* arg[]){
+
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+	{
+		std::cout << "ERROR IN SDL_Init" << SDL_GetError() << std::endl;
+
+		return -1;
+	}
+
+	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false);
+
+	CleanUp();
 	return 0;
 }
