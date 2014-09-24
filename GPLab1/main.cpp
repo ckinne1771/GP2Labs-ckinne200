@@ -104,6 +104,34 @@ void setViewport(int width, int height){
 
 }
 
+//This function draws objects to be rendered.
+void render()
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // This sets the clear colour AKA the background.
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Empties the colour and depth buffer
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, -5.0f);
+
+	glBegin(GL_TRIANGLES);
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glVertex3f(0.0f, 1.0f, 0.0f);
+		glVertex3f(-1.0f, -1.0f, 0.0f);
+		glVertex3f(1.0f, -1.0f, 0.0f);
+	glEnd();
+	
+
+	SDL_GL_SwapWindow(window); //VERY IMPORTANT!!!! Used to swap the back and front buffer.
+}
+
+//This function updates the state of the game
+
+void update()
+{
+
+}
+
 //The main method. This is the entry point for the project.
 int main(int argc, char* arg[]){
 
@@ -132,8 +160,15 @@ int main(int argc, char* arg[]){
 			}
 		}
 
+		update(); //Calls the update function
+		render(); // Calls the render function
+
+
 	}
+
+	
 
 	CleanUp();
 	return 0;
 }
+
