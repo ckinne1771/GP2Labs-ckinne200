@@ -1,10 +1,16 @@
 //Header Files. Here are the includes for the Input/Output streams and SDL
 #include <iostream>
 #include <SDL.h>
+#include <SDL_opengl.h> //includes the openGL header
+#include<gl/GLU.h> //Allows GLU to be used.
 //Put Global variables here
 
 //Pointer to the SDL Windows
 SDL_Window* window;
+
+//the context for SDL GL
+SDL_GLContext glcontext = NULL;
+
 
 //constants to control the window's variables
 
@@ -32,6 +38,43 @@ void CleanUp(){
 	SDL_Quit(); //clears up the memory allocated to initialise the SDL library.
 }
 
+void initOpenGL() //This function initialises OpenGL
+{
+	//creating the OpenGL context
+	glcontext = SDL_GL_CreateContext(window);
+
+	//for when something goes wrong in establishing the context
+	if (!glcontext)
+	{
+		std::cout << "Error creating OpenGL context" << SDL_GetError() << std::endl;
+
+	}
+
+	//This sets the shading to smooth
+	glShadeModel(GL_SMOOTH);
+
+	//This changes the background to black
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	//This changes the depth buffer to 1
+	glClearDepth(1.0f);
+
+	//This enables testing of the depth
+	glEnable(GL_DEPTH_TEST);
+
+	//This sets the testing framework to be used
+
+	glDepthFunc(GL_LEQUAL);
+
+	//This turns on best perspective correction.
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+}
+
+void setViewport(int Width, int Height){
+
+
+}
+
 //The main method. This is the entry point for the project.
 int main(int argc, char* arg[]){
 
@@ -53,7 +96,7 @@ int main(int argc, char* arg[]){
 		while (SDL_PollEvent(&event)){ //checks to see if there are any events in the queue. If there is, a positive result is returned. If not, 0 is returned.
 			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) // In the event of the application closing or quiting.
 			{
-				running = false; //close the gme loop.
+				running = false; //close the game loop.
 			}
 		}
 
