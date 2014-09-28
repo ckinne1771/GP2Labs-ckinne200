@@ -11,6 +11,31 @@ SDL_Window* window;
 //the context for SDL GL
 SDL_GLContext glcontext = NULL;
 
+//Gobal variables for the triangles
+float bottomLeftTriangleOneX = -1.0f;
+float bottomLeftTriangleOneY = -1.0f;
+float bottomLeftTriangleOneZ = 0.0f;
+
+float topLeftTriangleOneX = -1.0f;
+float topLeftTriangleOneY = 1.0f;
+float topLeftTriangleOneZ = 0.0f;
+
+float bottomRightTriangleOneX = 1.0f;
+float bottomRightTriangleOneY = -1.0f;
+float bottomRightTriangleOneZ = 0.0f;
+
+float topLeftTriangleTwoX = 1.5f;
+float topLeftTriangleTwoY = 1.0f;
+float topLeftTriangleTwoZ = 0.0f;
+
+float topRightTriangleTwoX = 2.0f;
+float topRightTriangleTwoY = 1.0f;
+float topRightTriangleTwoZ = 0.0f;
+
+float bottomRightTriangleTwoX = 2.0f;
+float bottomRightTriangleTwoY = 0.0f;
+float bottomRightTriangleTwoZ = 0.0f;
+
 
 //constants to control the window's variables
 
@@ -116,20 +141,19 @@ void render()
 
 	glBegin(GL_TRIANGLES);
 		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(-1.0f, 1.0f, 0.0f);
+		glVertex3f(topLeftTriangleOneX, topLeftTriangleOneY, topLeftTriangleOneZ);
 		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(-1.0f, -1.0f, 0.0f);
+		glVertex3f(bottomLeftTriangleOneX, bottomLeftTriangleOneY, bottomLeftTriangleOneZ);
 		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(1.0f, -1.0f, 0.0f);
-	glEnd();
+		glVertex3f(bottomRightTriangleOneX, bottomRightTriangleOneY, bottomRightTriangleOneZ);
 
 	glBegin(GL_TRIANGLES);
 	glColor3f(4.0f, 0.0f, 0.0f);
-	glVertex3f(1.5f, 1.0f, 0.0f);
+	glVertex3f(topLeftTriangleTwoX, topLeftTriangleTwoY, topLeftTriangleTwoZ);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(2.0f, 1.0f, 0.0f);
+	glVertex3f(topRightTriangleTwoX, topRightTriangleTwoY, topRightTriangleTwoZ);
 	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(2.0f, 0.0f, 0.0f);
+	glVertex3f(bottomRightTriangleTwoX, bottomRightTriangleTwoY, bottomRightTriangleTwoZ);
 	glEnd();
 	
 
