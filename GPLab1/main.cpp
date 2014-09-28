@@ -11,6 +11,9 @@ SDL_Window* window;
 //the context for SDL GL
 SDL_GLContext glcontext = NULL;
 
+Uint32 old_time, current_time;
+float deltatime = 0;
+
 //Gobal variables for the triangles
 float bottomLeftTriangleOneX = -1.0f;
 float bottomLeftTriangleOneY = -1.0f;
@@ -160,17 +163,19 @@ void render()
 	SDL_GL_SwapWindow(window); //VERY IMPORTANT!!!! Used to swap the back and front buffer.
 }
 
+
+
 //This function updates the state of the game
 
 void update()
 {
-
+	
 }
 
 //The main method. This is the entry point for the project.
 int main(int argc, char* arg[]){
 
-
+	
 	// the following if statement initialises the SDL library. If a value other than 0 is returned, an error has occured and we will be shown what that error is.
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
@@ -188,11 +193,45 @@ int main(int argc, char* arg[]){
 
 	while (running) //the game loop
 	{
+		old_time = current_time;
+		current_time = SDL_GetTicks();
+		deltatime = (float)(current_time - old_time) / 1000.0f;
+
 		while (SDL_PollEvent(&event)){ //checks to see if there are any events in the queue. If there is, a positive result is returned. If not, 0 is returned.
 			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) // In the event of the application closing or quiting.
 			{
 				running = false; //close the game loop.
 			}
+
+			switch (event.type){
+			case SDL_KEYDOWN:
+
+				switch (event.key.keysym.sym){
+				case SDLK_LEFT:
+					bottomLeftTriangleOneX = (bottomLeftTriangleOneX - (100.0f*deltatime));
+					bottomRightTriangleOneX = (bottomRightTriangleOneX - (100.0f*deltatime));
+					topLeftTriangleOneX = (topLeftTriangleOneX - (100.0f*deltatime));
+					break;
+				case SDLK_RIGHT:
+					bottomLeftTriangleOneX = (bottomLeftTriangleOneX + 0.1f);
+					bottomRightTriangleOneX = (bottomRightTriangleOneX + 0.1f);
+					topLeftTriangleOneX = (topLeftTriangleOneX + 0.1f);
+					break;
+				case SDLK_UP:
+					bottomLeftTriangleOneY = (bottomLeftTriangleOneY + 0.1f);
+					bottomRightTriangleOneY = (bottomRightTriangleOneY + 0.1f);
+					topLeftTriangleOneY = (topLeftTriangleOneY + 0.1f);
+					break;
+				case SDLK_DOWN:
+					bottomLeftTriangleOneY = (bottomLeftTriangleOneY - 0.1f);
+					bottomRightTriangleOneY = (bottomRightTriangleOneY - 0.1f);
+					topLeftTriangleOneY = (topLeftTriangleOneY - 0.1f);
+					break;
+					
+				}
+			}
+
+
 		}
 
 		update(); //Calls the update function
@@ -206,4 +245,3 @@ int main(int argc, char* arg[]){
 	CleanUp();
 	return 0;
 }
-
