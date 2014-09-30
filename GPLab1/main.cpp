@@ -1,5 +1,6 @@
 //Header Files. Here are the includes for the Input/Output streams and SDL
 #include <iostream>
+#include "Vertex.h"
 #include <SDL.h>
 #include<gl/glew.h>
 #include <SDL_opengl.h> //includes the openGL header
@@ -18,35 +19,15 @@ Uint32 old_time, current_time;
 float deltatime = 0;
 
 //Gobal variables for the triangles
-float bottomLeftTriangleOneX = -1.0f;
-float bottomLeftTriangleOneY = -1.0f;
-float bottomLeftTriangleOneZ = 0.0f;
 
-float topLeftTriangleOneX = -1.0f;
-float topLeftTriangleOneY = 1.0f;
-float topLeftTriangleOneZ = 0.0f;
 
-float bottomRightTriangleOneX = 1.0f;
-float bottomRightTriangleOneY = -1.0f;
-float bottomRightTriangleOneZ = 0.0f;
+Vertex triangleData[] = { { 0.0f, 1.0f, 0.0f,
+1.0f, 0.0f, 0.0f, 1.0f },
+{ -1.0f, -1.0f, 0.0f,
+0.0f, 1.0f, 0.0f, 1.0f },
+{ 1.0f, -1.0f, 0.0f,
+0.0f, 0.0f, 1.0f, 1.0f } };
 
-float topLeftTriangleTwoX = 1.5f;
-float topLeftTriangleTwoY = 1.0f;
-float topLeftTriangleTwoZ = 0.0f;
-
-float topRightTriangleTwoX = 2.0f;
-float topRightTriangleTwoY = 1.0f;
-float topRightTriangleTwoZ = 0.0f;
-
-float bottomRightTriangleTwoX = 2.0f;
-float bottomRightTriangleTwoY = 0.0f;
-float bottomRightTriangleTwoZ = 0.0f;
-
-float triangleData[] = {
-	0.0f, 1.0f, 0.0f, //Top
-	-1.0f, -1.0f, 0.0f, //Bottom Left
-	1.0f, -1.0f, 0.0f //Bottom Right
-};
 //constants to control the window's variables
 
 const int WINDOW_WIDTH = 640;
@@ -172,30 +153,29 @@ void render()
 	//Make the new VBO active. repeat here as a sanity check (may hav changed sine installation)
 	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
 
-	//Establish its 3 coordinates per vertex with zero stride (space between elements) in an array and contain floating point numbers
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	//The 3 parameter is now filled out, the pipeline needs to know the size of each vertex
+	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
 
-	//Establish array contains vertices (not normal, colours, texture coords etc)
+	//The last parameter basically says that the colours start 3 floats into each element of the array
+	glColorPointer(4, GL_FLOAT, sizeof(Vertex), (void**)(3 * sizeof(float)));
+	
+	//Establish array contains vertices & colours
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
 
 	//Switch to ModelView
 	glMatrixMode(GL_MODELVIEW);
 	//Reset using identity matrix
 	glLoadIdentity();
 	//translate
+	gluLookAt(0.0, 0.0, 0.0, 0.0,0.0, -1.0f, 0.0, 1.0, 0.0);
 	glTranslatef(0.0f, 0.0f, -6.0f);
 
 	
 	//Actually draw the triangle, giving the number of vertices provided
-	glDrawArrays(GL_TRIANGLES, 0, sizeof(triangleData) / (3 * sizeof(float)));
+	glDrawArrays(GL_TRIANGLES, 0, sizeof(triangleData) / (sizeof(Vertex)));
 
-	glLoadIdentity();
-	glTranslatef(2.0f, 0.0f, -6.0f);
-	glDrawArrays(GL_TRIANGLES, 0, sizeof(triangleData) / (3 * sizeof(float)));
-
-	glLoadIdentity();
-	glTranslatef(-2.0f, 0.0f, -6.0f);
-	glDrawArrays(GL_TRIANGLES, 0, sizeof(triangleData) / (3 * sizeof(float)));
+	
 	//glMatrixMode(GL_MODELVIEW);
 	//glLoadIdentity();
 	//glTranslatef(0.0f, 0.0f, -5.0f);
