@@ -21,12 +21,105 @@ float deltatime = 0;
 //Gobal variables for the triangles
 
 
-Vertex triangleData[] = { { 0.0f, 1.0f, 0.0f,
-1.0f, 0.0f, 0.0f, 1.0f },
-{ -1.0f, -1.0f, 0.0f,
-0.0f, 1.0f, 0.0f, 1.0f },
-{ 1.0f, -1.0f, 0.0f,
-0.0f, 0.0f, 1.0f, 1.0f } };
+Vertex triangleData[] = { 
+
+	//frontface
+		{ -0.5f, 0.5f, 0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
+		{ -0.5f, -0.5f, 0.5f,
+		1.0f, 1.0f, 0.0f, 1.0f },// Bottom Left
+		{ 0.5f, -0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f }, //Bottom Right
+		{ 0.5f, 0.5f, 0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },// Top Right
+		{ -0.5f, 0.5f, 0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
+		{ 0.5f, -0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f },
+		//left face
+		{ -0.5f, 0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
+		{ -0.5f, -0.5f, -0.5f,
+		1.0f, 1.0f, 0.0f, 1.0f },// Bottom Left
+		{ -0.5f, -0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f }, //Bottom Right
+		{ -0.5f, 0.5f, 0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },// Top Right
+		{ -0.5f, 0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
+		{ -0.5f, -0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f }, // Bottom Right
+
+		//right face
+		{ 0.5f, 0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
+		{ 0.5f, -0.5f, -0.5f,
+		1.0f, 1.0f, 0.0f, 1.0f },// Bottom Left
+		{ 0.5f, -0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f }, //Bottom Right
+		{ 0.5f, 0.5f, 0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },// Top Right
+		{ 0.5f, 0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
+		{ 0.5f, -0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f }, // Bottom Right
+
+		//bottom face
+		{ -0.5f, -0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },//top left 
+
+		{ -0.5f, -0.5f, 0.5f,
+		1.0f, 1.0f, 0.0f, 1.0f }, //bottom left
+
+		{ 0.5f, -0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
+
+		{ 0.5f, -0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f }, //top right
+
+		{ -0.5f, -0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f }, //top left
+
+		{ 0.5f, -0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
+
+		//top face
+
+		{ -0.5f, 0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f },//top left 
+
+		{ -0.5f,-0.5f, 0.5f,
+		1.0f, 1.0f, 0.0f, 1.0f }, //bottom left
+
+		{ 0.5f, 0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
+
+		{ 0.5f, 0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f }, //top right
+
+		{ -0.5f, 0.5f, -0.5f,
+		1.0f, 0.0f, 1.0f, 1.0f }, //top left
+
+		{ 0.5f, 0.5f, 0.5f,
+		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
+		//backface
+{ -0.5f, 0.5f, -0.5f,
+1.0f, 0.0f, 1.0f, 1.0f },//top left 
+
+{ -0.5f, -0.5f, -0.5f,
+1.0f, 1.0f, 0.0f, 1.0f }, //bottom left
+
+{ 0.5f, -0.5f, -0.5f,
+0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
+
+{ 0.5f, 0.5f, -0.5f,
+1.0f, 0.0f, 1.0f, 1.0f }, //top right
+
+{ -0.5f, 0.5f,  -0.5f,
+1.0f, 0.0f, 1.0f, 1.0f }, //top left
+
+{ 0.5f, -0.5f, -0.5f,
+0.0f, 1.0f, 1.0f, 1.0f }, };//bottom right
 
 //constants to control the window's variables
 
@@ -169,7 +262,7 @@ void render()
 	glLoadIdentity();
 	//translate
 	gluLookAt(0.0, 0.0, 0.0, 0.0,0.0, -1.0f, 0.0, 1.0, 0.0);
-	glTranslatef(0.0f, 0.0f, -6.0f);
+	glTranslatef(-2.0f, -2.0f, -6.0f);
 
 	
 	//Actually draw the triangle, giving the number of vertices provided
