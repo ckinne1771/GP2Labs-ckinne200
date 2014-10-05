@@ -19,107 +19,56 @@ Uint32 old_time, current_time;
 float deltatime = 0;
 
 //Gobal variables for the triangles
+GLuint triangleEBO;
 
+Vertex triangleData[] = {
 
-Vertex triangleData[] = { 
-
-	//frontface
+	//front
 		{ -0.5f, 0.5f, 0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
-		{ -0.5f, -0.5f, 0.5f,
-		1.0f, 1.0f, 0.0f, 1.0f },// Bottom Left
+		1.0f,0.0f,1.0f,1.0f}, //top left
+		{-0.5f,-0.5f,0.5f,
+		1.0f,1.0f,0.0f,1.0f}, //bottom left
 		{ 0.5f, -0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, //Bottom Right
-		{ 0.5f, 0.5f, 0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },// Top Right
-		{ -0.5f, 0.5f, 0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
-		{ 0.5f, -0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f },
-		//left face
-		{ -0.5f, 0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
+		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
+		{0.5f,0.5f,0.5f,
+		1.0f,0.0f,1.0f,1.0f}, //top right
+
+	//back
+		{-0.5f, 0.5f,-0.5f,
+		1.0f,0.0f,1.0f,1.0f}, // top left
 		{ -0.5f, -0.5f, -0.5f,
-		1.0f, 1.0f, 0.0f, 1.0f },// Bottom Left
-		{ -0.5f, -0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, //Bottom Right
-		{ -0.5f, 0.5f, 0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },// Top Right
-		{ -0.5f, 0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
-		{ -0.5f, -0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, // Bottom Right
+		1.0f, 1.0f, 0.0f, 1.0f }, // bottom left
+		{0.5f,-0.5f,-0.5f,
+		0.0f,1.0f,1.0f,1.0f}, // bottom right
+		{0.5f,0.5f,-0.5f,
+		1.0f,0.0f,1.0f,1.0f}, // top right
+};
+		
+GLuint indices[] = {
+	//front
+	0, 1, 2,
+	0, 3, 2,
 
-		//right face
-		{ 0.5f, 0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
-		{ 0.5f, -0.5f, -0.5f,
-		1.0f, 1.0f, 0.0f, 1.0f },// Bottom Left
-		{ 0.5f, -0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, //Bottom Right
-		{ 0.5f, 0.5f, 0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },// Top Right
-		{ 0.5f, 0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },// Top Left
-		{ 0.5f, -0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, // Bottom Right
+	//left
+	4, 5, 1,
+	4, 1, 0,
 
-		//bottom face
-		{ -0.5f, -0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },//top left 
+	//right
+	3, 7, 2,
+	7, 6, 2,
 
-		{ -0.5f, -0.5f, 0.5f,
-		1.0f, 1.0f, 0.0f, 1.0f }, //bottom left
+	//bottom
+	1, 5, 2,
+	6, 2, 1,
 
-		{ 0.5f, -0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
+	//top
+	5, 0, 7,
+	5, 7, 3,
 
-		{ 0.5f, -0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f }, //top right
-
-		{ -0.5f, -0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f }, //top left
-
-		{ 0.5f, -0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
-
-		//top face
-
-		{ -0.5f, 0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f },//top left 
-
-		{ -0.5f,-0.5f, 0.5f,
-		1.0f, 1.0f, 0.0f, 1.0f }, //bottom left
-
-		{ 0.5f, 0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
-
-		{ 0.5f, 0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f }, //top right
-
-		{ -0.5f, 0.5f, -0.5f,
-		1.0f, 0.0f, 1.0f, 1.0f }, //top left
-
-		{ 0.5f, 0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
-		//backface
-{ -0.5f, 0.5f, -0.5f,
-1.0f, 0.0f, 1.0f, 1.0f },//top left 
-
-{ -0.5f, -0.5f, -0.5f,
-1.0f, 1.0f, 0.0f, 1.0f }, //bottom left
-
-{ 0.5f, -0.5f, -0.5f,
-0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
-
-{ 0.5f, 0.5f, -0.5f,
-1.0f, 0.0f, 1.0f, 1.0f }, //top right
-
-{ -0.5f, 0.5f,  -0.5f,
-1.0f, 0.0f, 1.0f, 1.0f }, //top left
-
-{ 0.5f, -0.5f, -0.5f,
-0.0f, 1.0f, 1.0f, 1.0f }, };//bottom right
+	//back
+	4, 5, 6,
+	4, 7, 6
+};
 
 //constants to control the window's variables
 
@@ -146,7 +95,9 @@ void InitWindow(int width, int height, bool fullscreen){
 		);
 }
 //The cleanup method. This i used to clean up memory once we exit the game loop.
-void CleanUp(){
+void CleanUp()
+{
+	glDeleteBuffers(1, &triangleEBO);
 	glDeleteBuffers(1, &triangleVBO);
 	SDL_GL_DeleteContext(glcontext); //Clears up the memory allocated to handle the OpenGL functionality.
 	SDL_DestroyWindow(window); //clears up the memory allocated to call and create the window.
@@ -202,6 +153,14 @@ void initGeometry()
 	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
 	//Copy Vertex Data to VBO
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleData), triangleData, GL_STATIC_DRAW);
+
+
+	//create Element Buffer
+	glGenBuffers(1, &triangleEBO);
+	//Make the EBO active
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleEBO);
+	//Copy Index Data into the EBO
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
 void setViewport(int width, int height){
@@ -245,6 +204,7 @@ void render()
 
 	//Make the new VBO active. repeat here as a sanity check (may hav changed sine installation)
 	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleEBO);
 
 	//The 3 parameter is now filled out, the pipeline needs to know the size of each vertex
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
@@ -266,7 +226,7 @@ void render()
 
 	
 	//Actually draw the triangle, giving the number of vertices provided
-	glDrawArrays(GL_TRIANGLES, 0, sizeof(triangleData) / (sizeof(Vertex)));
+	glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
 
 	
 	//glMatrixMode(GL_MODELVIEW);
