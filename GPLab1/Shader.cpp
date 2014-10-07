@@ -6,6 +6,11 @@ GLuint loadShaderFromMemoryerFromMemory(const char * pMem, SHADER_TYPE shaderTyp
 	GLuint program = glCreateShader(shaderType);
 	glShaderSource(program, 1, &pMem, NULL);
 	glCompileShader(program);
+
+	if (checkForCompilerErrors(program))
+	{
+		return 0;
+	}
 	return program;
 }
 
@@ -41,3 +46,27 @@ GLuint loadShaderFromFile(const std::string& filename, SHADER_TYPE shaderType)
 	}
 	return 0;
 	}
+
+bool checkForCompilerErrors(GLuint shaderProgram)
+{
+	GLint isCompiled = 0;
+	glGetShaderiv(shaderProgram, GL_COMPILE_STATUS, &isCompiled);
+	if (isCompiled = GL_FALSE)
+	{
+		GLint maxLength = 0;
+		glGetShaderiv(shaderProgram, GL_INFO_LOG_LENGTH, &maxLength);
+
+		//The maxLength includes the NULL character
+		std::string infoLog;
+		infoLog.resize(maxLength);
+		glGetShaderInfoLog(shaderProgram, maxLength, &maxLength, &infoLog[0]);
+
+		std::cout << "Shader not compiled" << infoLog << std::endl;
+
+		//we dont need the shader anymore.
+		glDeleteShader(shaderProgram);
+		return true;
+	}
+
+	return false;
+}

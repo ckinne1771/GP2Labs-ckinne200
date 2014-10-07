@@ -5,6 +5,7 @@
 #include<gl/glew.h>
 #include <SDL_opengl.h> //includes the openGL header
 #include<gl/GLU.h> //Allows GLU to be used.
+#include "Shader.h"
 #ifdef _DEBUG && WIN32
 const std::string ASSET_PATH = "../assets";
 #else
@@ -225,6 +226,17 @@ void update()
 	old_time = current_time;
 	current_time = SDL_GetTicks();
 	deltatime = (float)(current_time - old_time) / 1000.0f;
+}
+
+void createShader()
+{
+	GLuint vertexShaderProgram = 0;
+	std::string vsPath = ASSET_PATH + SHADER_PATH + "simpleVS.glsl";
+	vertexShaderProgram = loadShaderFromFile(vsPath, VERTEX_SHADER);
+
+	GLuint fragmentShaderProgram = 0;
+	std::string fsPath = ASSET_PATH + SHADER_PATH + "/simpleFS.glsl";
+	fragmentShaderProgram = loadShaderFromFile(fsPath, FRAGMENT_SHADER);
 }
 
 //The main method. This is the entry point for the project.
