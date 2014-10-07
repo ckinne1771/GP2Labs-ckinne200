@@ -5,6 +5,13 @@
 #include<gl/glew.h>
 #include <SDL_opengl.h> //includes the openGL header
 #include<gl/GLU.h> //Allows GLU to be used.
+#ifdef _DEBUG && WIN32
+const std::string ASSET_PATH = "../assets";
+#else
+const std::string ASSET_PATH = "assets";
+#endif
+
+const std::string SHADER_PATH = "/shaders";
 
 //Put Global variables here
 
@@ -42,6 +49,7 @@ Vertex triangleData[] = {
 		0.0f,1.0f,1.0f,1.0f}, // bottom right
 		{0.5f,0.5f,-0.5f,
 		1.0f,0.0f,1.0f,1.0f}, // top right
+
 };
 		
 GLuint indices[] = {
@@ -106,6 +114,10 @@ void CleanUp()
 
 void initOpenGL() //This function initialises OpenGL
 {
+	//ask for the 3.2 version of OpenGL
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	//creating the OpenGL context
 	glcontext = SDL_GL_CreateContext(window);
 
@@ -135,6 +147,7 @@ void initOpenGL() //This function initialises OpenGL
 	//This turns on best perspective correction.
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+	glewExperimental = GL_TRUE;
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
@@ -183,17 +196,7 @@ void setViewport(int width, int height){
 
 	//The following code sets up the Perspective Transformation
 
-	glMatrixMode(GL_PROJECTION); //This changes the Matrix Mode to project the matrix
-	glLoadIdentity();
-
-	gluPerspective(45.0f, ratio, 0.1f, 100.0f); //Calculates the perspective matrix using the functions provided by the glu library.
-	//the values used in the calculations represent the FOV, screen ratio, the nearest specified point on the z axis and the furthest specified point on the z axis.
 	
-	
-	glMatrixMode(GL_MODELVIEW); //Switches the Matrix mode to ModelView
-
-	glLoadIdentity(); //This resets using the Identity Matrix
-
 }
 
 //This function draws objects to be rendered.
@@ -206,50 +209,9 @@ void render()
 	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleEBO);
 
-	//The 3 parameter is now filled out, the pipeline needs to know the size of each vertex
-	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
-
-	//The last parameter basically says that the colours start 3 floats into each element of the array
-	glColorPointer(4, GL_FLOAT, sizeof(Vertex), (void**)(3 * sizeof(float)));
-	
-	//Establish array contains vertices & colours
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
-
-	//Switch to ModelView
-	glMatrixMode(GL_MODELVIEW);
-	//Reset using identity matrix
-	glLoadIdentity();
-	//translate
-	gluLookAt(0.0, 0.0, 0.0, 0.0,0.0, -1.0f, 0.0, 1.0, 0.0);
-	glTranslatef(-2.0f, -2.0f, -6.0f);
-
 	
 	//Actually draw the triangle, giving the number of vertices provided
 	glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
-
-	
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
-	//glTranslatef(0.0f, 0.0f, -5.0f);
-
-	/*glBegin(GL_TRIANGLES);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(topLeftTriangleOneX, topLeftTriangleOneY, topLeftTriangleOneZ);
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(bottomLeftTriangleOneX, bottomLeftTriangleOneY, bottomLeftTriangleOneZ);
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(bottomRightTriangleOneX, bottomRightTriangleOneY, bottomRightTriangleOneZ);
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(4.0f, 0.0f, 0.0f);
-	glVertex3f(topLeftTriangleTwoX, topLeftTriangleTwoY, topLeftTriangleTwoZ);
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(topRightTriangleTwoX, topRightTriangleTwoY, topRightTriangleTwoZ);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(bottomRightTriangleTwoX, bottomRightTriangleTwoY, bottomRightTriangleTwoZ);
-	glEnd();*/
-	
 
 	SDL_GL_SwapWindow(window); //VERY IMPORTANT!!!! Used to swap the back and front buffer.
 }
