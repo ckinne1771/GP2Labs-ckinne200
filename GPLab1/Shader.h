@@ -18,3 +18,4 @@ GLuint loadShaderFromFile(const std::string& filename, SHADER_TYPE shaderType);
 #endif
 
 bool checkForCompilerErrors(GLuint shaderProgram);
+bool checkForLinkErrors(GLuint program);
