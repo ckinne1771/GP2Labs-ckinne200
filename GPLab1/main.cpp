@@ -44,25 +44,24 @@ GLuint triangleEBO;
 
 Vertex triangleData[] = {
 
-	//front
-		{ -0.5f, 0.5f, 0.5f,
-		1.0f,0.0f,1.0f,1.0f}, //top left
-		{-0.5f,-0.5f,0.5f,
-		1.0f,1.0f,0.0f,1.0f}, //bottom left
-		{ 0.5f, -0.5f, 0.5f,
-		0.0f, 1.0f, 1.0f, 1.0f }, //bottom right
-		{0.5f,0.5f,0.5f,
-		1.0f,0.0f,1.0f,1.0f}, //top right
+	//Front
+	-0.5f, 0.5f, 0.5f,// Top Left
+
+	-0.5f, -0.5f, 0.5f,// Bottom Left
+
+	0.5f, -0.5f, 0.5f, //Bottom Right
+
+	0.5f, 0.5f, 0.5f,// Top Right
+
 
 	//back
-		{-0.5f, 0.5f,-0.5f,
-		1.0f,0.0f,1.0f,1.0f}, // top left
-		{ -0.5f, -0.5f, -0.5f,
-		1.0f, 1.0f, 0.0f, 1.0f }, // bottom left
-		{0.5f,-0.5f,-0.5f,
-		0.0f,1.0f,1.0f,1.0f}, // bottom right
-		{0.5f,0.5f,-0.5f,
-		1.0f,0.0f,1.0f,1.0f}, // top right
+	-0.5f, 0.5f, -0.5f,// Top Left
+
+	-0.5f, -0.5f, -0.5f,// Bottom Left
+
+	0.5f, -0.5f, -0.5f, //Bottom Right
+
+	0.5f, 0.5f, -0.5f,// Top Right
 
 };
 		
@@ -103,7 +102,7 @@ const int FRAMES_PER_SECOND = 60;
 bool running = true;
 GLuint triangleVBO;
 
-
+GLuint VAO;
 
 //This initialises the window. Height, width and a fullscreen boolean are used here.
 void InitWindow(int width, int height, bool fullscreen){
@@ -122,6 +121,7 @@ void CleanUp()
 	glDeleteProgram(shaderProgram);
 	glDeleteBuffers(1, &triangleEBO);
 	glDeleteBuffers(1, &triangleVBO);
+	glDeleteBuffers(1, &VAO);
 	SDL_GL_DeleteContext(glcontext); //Clears up the memory allocated to handle the OpenGL functionality.
 	SDL_DestroyWindow(window); //clears up the memory allocated to call and create the window.
 	SDL_Quit(); //clears up the memory allocated to initialise the SDL library.
@@ -173,7 +173,8 @@ void initOpenGL() //This function initialises OpenGL
 
 void initGeometry()
 {
-	
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
 
 	//Create buffer
 	glGenBuffers(1, &triangleVBO);
@@ -223,7 +224,7 @@ void render()
 	//Make the new VBO active. repeat here as a sanity check (may hav changed sine installation)
 	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleEBO);
-
+	glBindVertexArray(VAO);
 	glUseProgram(shaderProgram);
 	GLuint  MVPLocation = glGetUniformLocation(shaderProgram, "MVP");
 	mat4 MVP = projMatrix*viewMatrix*worldMatrix;
