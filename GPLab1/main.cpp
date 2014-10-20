@@ -316,6 +316,13 @@ int main(int argc, char* arg[]){
 		return -1;
 	}
 
+	int imageInitFlags = IMG_INIT_JPG | IMG_INIT_PNG;
+	int returnInitFlags = IMG_Init(imageInitFlags);
+	if (((returnInitFlags)&(imageInitFlags)) != imageInitFlags) {
+		std::cout << "ERROR SDL_Image Init" << IMG_GetError() << std::endl;
+		//handle error
+	}
+
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false);
 
 	initOpenGL(); //The call for the InitOpenGL Function
