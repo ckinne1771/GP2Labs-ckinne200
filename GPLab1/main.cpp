@@ -7,6 +7,7 @@
 #include<gl/GLU.h> //Allows GLU to be used.
 #include "Shader.h"
 #include "Texture.h"
+#include <SDL_ttf.h>
 //maths headers
 #include <glm/glm.hpp>
 #include <Windows.h>
@@ -314,6 +315,11 @@ int main(int argc, char* arg[]){
 		std::cout << "ERROR IN SDL_Init" << SDL_GetError() << std::endl;
 
 		return -1;
+	}
+
+	if (TTF_Init() == -1)
+	{
+		std::cout << "ERROR TTF_Init:" << TTF_GetError();
 	}
 
 	int imageInitFlags = IMG_INIT_JPG | IMG_INIT_PNG;
