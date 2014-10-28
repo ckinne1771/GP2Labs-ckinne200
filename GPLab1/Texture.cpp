@@ -46,17 +46,3 @@ GLuint loadTextureFromFile(const std::string& filename)
 	glGenerateMipmap(GL_TEXTURE_2D);
 	return textureID;
 }
-
-GLuint loadTextureFromFont(const std::string& fontFilename, int pointSize, const std::string& text)
-{
-	GLuint textureID = 0;
-	TTF_Font *font = TTF_OpenFont(fontFilename.c_str(), pointSize);
-	if (!font)
-	{
-		std::cout << "Unable to load font" << fontFilename << "	" << TTF_GetError();
-		return textureID;
-	}
-	return textureID;
-
-	SDL_Surface *textSurface = TTF_RenderText_Blended(font, text.c_str(), {255,255, 255})
-}

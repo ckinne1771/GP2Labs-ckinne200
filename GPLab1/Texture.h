@@ -6,9 +6,7 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <string>
-#include <SDL_ttf.h>
 
 GLuint loadTextureFromFile(const std::string& filename);
 
-GLuint loadTextureFromFont(const std::string& fontFilename, int pointSize, const std::string& text);
 #endif
