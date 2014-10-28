@@ -25,9 +25,11 @@ const std::string ASSET_PATH = "assets";
 #endif
 const std::string TEXTURE_PATH = "textures/";
 const std::string SHADER_PATH = "shaders/";
+const std::string FONT_PATH = "fonts/";
 
 //Put Global variables here
 GLuint texture = 0;
+GLuint fontTexture = 0;
 //Pointer to the SDL Windows
 SDL_Window* window;
 
@@ -124,7 +126,8 @@ void InitWindow(int width, int height, bool fullscreen){
 //The cleanup method. This i used to clean up memory once we exit the game loop.
 void CleanUp()
 {
-	glDeleteTextures(1, &texture);
+	
+	glDeleteTextures(1, &fontTexture);
 	glDeleteProgram(shaderProgram);
 	glDeleteBuffers(1, &triangleEBO);
 	glDeleteBuffers(1, &triangleVBO);
@@ -235,7 +238,7 @@ void render()
 	glUseProgram(shaderProgram);
 	GLint texture0Location = glGetUniformLocation(shaderProgram, "texture0");
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, fontTexture);
 	glUniform1i(texture0Location, 0);
 	GLuint  MVPLocation = glGetUniformLocation(shaderProgram, "MVP");
 	mat4 MVP = projMatrix*viewMatrix*worldMatrix;
@@ -303,6 +306,11 @@ void createTexture()
 {
 	std::string texturePath = ASSET_PATH + TEXTURE_PATH + "/texture.png";
 	texture = loadTextureFromFile(texturePath);
+}
+void createFontTexture()
+{
+	std::string fontPath = ASSET_PATH + FONT_PATH + "/OratorStd.otf";
+	fontTexture = loadTextureFromFont(fontPath, 20, "hello");
 }
 
 //The main method. This is the entry point for the project.
