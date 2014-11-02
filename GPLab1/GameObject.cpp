@@ -2,7 +2,7 @@
 
 GameObject::GameObject()
 {
-	m_Name = "GameObject";
+	//m_Name = "GameObject";
 	
 }
 
@@ -43,11 +43,23 @@ void GameObject::destroy(){
 			(*iter) = NULL;
 			iter = m_Components.erase(iter);
 		}
+		else
+		{
+			iter++;
+		}
 	}
+	m_Components.clear();
 }
 
-const std::string& getName()
+const std::string& GameObject::getName()
+{
+	return m_Name;
+}
+
+void GameObject::setName(const std::string& m_Name)
 {
 
 }
+
+
 
