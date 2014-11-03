@@ -10,6 +10,12 @@
 //maths headers
 #include <glm/glm.hpp>
 #include <Windows.h>
+#include <vector>
+#include "GameObject.h"
+#include "Transform.h"
+#include "Mesh.h"
+#include "Material.h"
+#include "Camera.h"
 using glm::mat4;
 using glm::vec3;
 
@@ -33,9 +39,12 @@ SDL_Window* window;
 //the context for SDL GL
 SDL_GLContext glcontext = NULL;
 
+std::vector<GameObject*> displayList;
 
 Uint32 old_time, current_time;
 float deltatime = 0;
+
+GameObject* mainCamera;
 
 
 //matrices
@@ -123,11 +132,28 @@ void InitWindow(int width, int height, bool fullscreen){
 //The cleanup method. This i used to clean up memory once we exit the game loop.
 void CleanUp()
 {
-	glDeleteTextures(1, &texture);
-	glDeleteProgram(shaderProgram);
-	glDeleteBuffers(1, &triangleEBO);
-	glDeleteBuffers(1, &triangleVBO);
-	glDeleteBuffers(1, &VAO);
+	//glDeleteTextures(1, &texture);
+	//glDeleteProgram(shaderProgram);
+	//glDeleteBuffers(1, &triangleEBO);
+	//glDeleteBuffers(1, &triangleVBO);
+	//glDeleteBuffers(1, &VAO);
+
+	auto iter = displayList.begin();
+	while (iter != displayList.end())
+	{
+		(*iter)->destroy();
+		if ((*iter))
+		{
+			delete (*iter);
+			(*iter) = NULL;
+			iter = displayList.erase(iter);
+		}
+		else
+		{
+			iter++;
+		}
+	}
+	displayList.clear();
 	SDL_GL_DeleteContext(glcontext); //Clears up the memory allocated to handle the OpenGL functionality.
 	SDL_DestroyWindow(window); //clears up the memory allocated to call and create the window.
 	SDL_Quit(); //clears up the memory allocated to initialise the SDL library.
@@ -221,6 +247,52 @@ void setViewport(int width, int height){
 	
 }
 
+void Initialise()
+{
+	mainCamera = new GameObject();
+	mainCamera->setName("MainCamera");
+
+	Transform *t = new Transform();
+	t->setPosition(0.0f, 0.0f, 10.0f);
+	mainCamera->setTransform(t);
+
+	Camera * c = new Camera();
+	c->setAspectRatio((float)(WINDOW_WIDTH / WINDOW_HEIGHT));
+	c->setFOV(45.0f);
+	c->setNearClip(0.1f);
+	c->setFarClip(1000.0f);
+
+	mainCamera->setCamera(c);
+	displayList.push_back(mainCamera);
+
+
+	GameObject * cube = new GameObject();
+	cube->setName("Cube");
+	Transform *transform = new Transform();
+	transform->setPosition(0.0f, 0.0f, 0.0f);
+	cube->setTransform(transform);
+
+	Material * material = new Material();
+	std::string vsPath = ASSET_PATH + SHADER_PATH + "/simpleVS.glsl";
+	std::string fsPath = ASSET_PATH + SHADER_PATH + "/simpleFS.glsl";
+	material->loadShader(vsPath, fsPath);
+	cube->setMaterial(material);
+
+	Mesh * mesh = new Mesh();
+	cube->setMesh(mesh);
+	displayList.push_back(cube);
+
+
+	//alternative sytanx
+	for (auto iter = displayList.begin(); iter != displayList.end(); iter++)
+	{
+		(*iter)->init();
+	}
+
+	mesh->copyVertexData(8, sizeof(Vertex), (void**)triangleData);
+	mesh->copyIndexData(36, sizeof(int), (void**)indices);
+}
+
 //This function draws objects to be rendered.
 void render()
 {
@@ -228,7 +300,7 @@ void render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Empties the colour and depth buffer
 
 	//Make the new VBO active. repeat here as a sanity check (may hav changed sine installation)
-	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+	/*glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleEBO);
 	glBindVertexArray(VAO);
 	glUseProgram(shaderProgram);
@@ -250,6 +322,30 @@ void render()
 	
 	//Actually draw the triangle, giving the number of vertices provided
 	glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
+	*/
+
+	for (auto iter = displayList.begin(); iter != displayList.end(); iter++)
+	{
+		(*iter)->render();
+
+		Mesh * currentMesh = (*iter)->getMesh();
+		Transform * currentTransform = (*iter)->getTransform();
+		Material * currentMaterial = (*iter)->getMaterial();
+
+		if (currentMesh && currentMaterial && currentTransform)
+		{
+			currentMaterial->bind();
+			currentMesh->Bind();
+
+			GLint MVPLocation = currentMaterial->getUniformLocation("MVP");
+
+			Camera * cam = mainCamera->getCamera();
+			mat4 MVP = cam->getProjection()*cam->getView()*currentTransform->getModelMatrix();
+			glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
+
+			glDrawElements(GL_TRIANGLES, currentMesh->getIndexCount(), GL_UNSIGNED_INT, 0);
+		}
+	}
 
 	SDL_GL_SwapWindow(window); //VERY IMPORTANT!!!! Used to swap the back and front buffer.
 }
@@ -260,7 +356,7 @@ void render()
 
 void update()
 {
-	old_time = current_time;
+	/*old_time = current_time;
 	current_time = SDL_GetTicks();
 	deltatime = (float)(current_time - old_time) / 1000.0f;
 
@@ -268,6 +364,11 @@ void update()
 
 	viewMatrix = glm::lookAt(vec3(0.0f, 0.0f, 10.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 	worldMatrix = glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f));
+*/
+	for (auto iter = displayList.begin(); iter != displayList.end(); iter++)
+	{
+		(*iter)->update();
+	}
 }
 
 void createShader()
@@ -308,7 +409,7 @@ void createTexture()
 int main(int argc, char* arg[]){
 
 	
-	// the following if statement initialises the SDL library. If a value other than 0 is returned, an error has occured and we will be shown what that error is.
+/*	// the following if statement initialises the SDL library. If a value other than 0 is returned, an error has occured and we will be shown what that error is.
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
 		std::cout << "ERROR IN SDL_Init" << SDL_GetError() << std::endl;
@@ -333,7 +434,9 @@ int main(int argc, char* arg[]){
 	SDL_Event event; //This holds the event data generated by the program. Most window based applications are event driven, which means that different events will be generated by the user's interaction during the program's lifecycle.
 	createTexture();
 	createShader();
+	*/
 
+	SDL_Event event;
 	while (running) //the game loop
 	{
 		

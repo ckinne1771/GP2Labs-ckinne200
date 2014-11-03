@@ -9,6 +9,12 @@
 #include "Component.h"
 #include <vector>
 
+class Component;
+class Transform;
+class Mesh;
+class Material;
+class Camera;
+
 class GameObject{
 public:
 	GameObject();
@@ -19,11 +25,24 @@ public:
 	void destroy();
 	const std::string& getName();
 	void setName(const std::string& name);
-	void addComponent(Component* component);
+	void addComponent(Component * component);
+	void setTransform(Transform * transform);
+	void setMesh(Mesh * mesh);
+	void setMaterial(Material * material);
+	void setCamera(Camera * camera);
+	Transform * getTransform();
+	Mesh *getMesh();
+	Material *getMaterial();
+	Camera * getCamera();
 protected:
 private:
 	std::string m_Name;
 	std::vector<Component*> m_Components;
+
+	Transform *m_Transform;
+	Mesh *m_Mesh;
+	Material *m_Material;
+	Camera *m_Camera;
 };
 
 #endif#

@@ -17,13 +17,13 @@ public:
 	Transform();
 	~Transform();
 	void Update();
-	vec3 getPosition();
-	void setPosition(vec3 position);
-	vec3 getScale();
-	void setScale(vec3 scale);
-	vec3 getRotation();
-	void setRotation(vec3 rotation);
-	mat4 getModelMatrix();
+	vec3& getPosition();
+	void setPosition(float x, float y, float z);
+	vec3& getScale();
+	void setScale(float x, float y, float z);
+	vec3& getRotation();
+	void setRotation(float x, float y, float z);
+	mat4& getModelMatrix();
 protected:
 private:
 	vec3 m_Position;

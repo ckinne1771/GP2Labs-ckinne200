@@ -5,6 +5,10 @@ using glm::mat4;
 using glm::vec3;
 Transform::Transform()
 {
+	m_Position = vec3(0.0f, 0.0f, 0.0f);
+	m_Rotation = vec3(0.0f, 0.0f, 0.0f);
+	m_Scale = vec3(1.0f, 1.0f, 1.0f);
+	m_Model = mat4();
 
 }
 
@@ -29,37 +33,38 @@ void Transform::Update()
 	
 }
 
-vec3 Transform::getPosition()
+vec3& Transform::getPosition()
 {
 	return m_Position;
 }
 
-void Transform::setPosition(vec3 m_Position)
+void Transform::setPosition(float x, float y, float z)
 {
-
+	m_Position = vec3(x,y,z);
 }
 
-vec3 Transform::getScale()
+vec3& Transform::getScale()
 {
 	return m_Scale;
 }
 
-void Transform::setScale(vec3 m_Scale)
+void Transform::setScale(float x, float y, float z)
 {
-	
+	m_Scale = vec3(x, y, z);
 }
 
-vec3 Transform::getRotation()
+vec3& Transform::getRotation()
 {
 	return m_Rotation;
 
 }
 
-void Transform::setRotation(vec3 m_Rotation)
+void Transform::setRotation(float x, float y, float z)
 {
+	m_Rotation = vec3(x, y, z);
 }
 
-mat4 Transform::getModelMatrix()
+mat4& Transform::getModelMatrix()
 {
 	return m_Model;
 }
