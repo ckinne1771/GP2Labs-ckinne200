@@ -18,14 +18,34 @@ Mesh::Mesh()
 	m_VAO = 0;
 	m_Type = "Mesh";
 }
+
+Mesh::~Mesh()
+{
+
+}
+
+void CheckForErrorsMesh()
+{
+	GLenum error;
+	do{
+		error = glGetError();
+	} while (error != GL_NO_ERROR);
+}
+
 void Mesh::init()
 {
-	glGenBuffers(1, &m_VAO);
+	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray(m_VAO);
-	glGenBuffers(GL_ARRAY_BUFFER, &m_VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	
+
+	glGenBuffers(1, &m_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
+	
+	
+
 	glGenBuffers(1, &m_EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), NULL);
 	glEnableVertexAttribArray(1);

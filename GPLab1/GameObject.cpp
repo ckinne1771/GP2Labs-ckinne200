@@ -8,6 +8,11 @@
 GameObject::GameObject()
 {
 	m_Name = "GameObject";
+	m_Transform = NULL;
+	m_Mesh = NULL;
+	m_Material = NULL;
+	m_Camera = NULL;
+
 	
 }
 
