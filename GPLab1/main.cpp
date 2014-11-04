@@ -41,8 +41,7 @@ SDL_GLContext glcontext = NULL;
 
 std::vector<GameObject*> displayList;
 
-Uint32 old_time, current_time;
-float deltatime = 0;
+
 
 GameObject* mainCamera;
 
@@ -211,26 +210,7 @@ void initOpenGL() //This function initialises OpenGL
 	}
 }
 
-/*void initGeometry()
-{
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
 
-	//Create buffer
-	glGenBuffers(1, &triangleVBO);
-	//make the new VBO active
-	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
-	//Copy Vertex Data to VBO
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleData), triangleData, GL_STATIC_DRAW);
-
-
-	//create Element Buffer
-	glGenBuffers(1, &triangleEBO);
-	//Make the EBO active
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleEBO);
-	//Copy Index Data into the EBO
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-}*/
 
 void setViewport(int width, int height){
 
@@ -307,30 +287,6 @@ void render()
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // This sets the clear colour AKA the background.
 	glClearDepth(1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Make the new VBO active. repeat here as a sanity check (may hav changed sine installation)
-	/*glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleEBO);
-	glBindVertexArray(VAO);
-	glUseProgram(shaderProgram);
-	GLint texture0Location = glGetUniformLocation(shaderProgram, "texture0");
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glUniform1i(texture0Location, 0);
-	GLuint  MVPLocation = glGetUniformLocation(shaderProgram, "MVP");
-	mat4 MVP = projMatrix*viewMatrix*worldMatrix;
-	glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(MVP));
-	//Tell the shader that 0 is the position element
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), NULL);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)sizeof(vec3));
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3)+sizeof(vec2)));
-
-	
-	//Actually draw the triangle, giving the number of vertices provided
-	glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
-	*/
 
 	for (auto iter = displayList.begin(); iter != displayList.end(); iter++)
 	{
@@ -364,55 +320,12 @@ void render()
 
 void update()
 {
-	/*old_time = current_time;
-	current_time = SDL_GetTicks();
-	deltatime = (float)(current_time - old_time) / 1000.0f;
-
-	projMatrix = glm::perspective(45.0f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.f);
-
-	viewMatrix = glm::lookAt(vec3(0.0f, 0.0f, 10.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-	worldMatrix = glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f));
-*/
 	for (auto iter = displayList.begin(); iter != displayList.end(); iter++)
 	{
 		(*iter)->update();
 	}
 }
 
-/*void createShader()
-{
-	char directory[1024];
-	GetCurrentDirectoryA(1024, directory);
-	GLuint vertexShaderProgram = 0;
-	std::string vsPath = ASSET_PATH + SHADER_PATH + "textureVS.glsl";
-	vertexShaderProgram = loadShaderFromFile(vsPath, VERTEX_SHADER);
-
-	GLuint fragmentShaderProgram = 0;
-	std::string fsPath = ASSET_PATH + SHADER_PATH + "textureFS.glsl";
-	fragmentShaderProgram = loadShaderFromFile(fsPath, FRAGMENT_SHADER);
-
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShaderProgram);
-	glAttachShader(shaderProgram, fragmentShaderProgram);
-	glLinkProgram(shaderProgram);
-	checkForLinkErrors(shaderProgram);
-
-	glBindAttribLocation(shaderProgram, 0, "vertexPosition");
-	glBindAttribLocation(shaderProgram, 1, "vertexTexCoords");
-	glBindAttribLocation(shaderProgram, 2, "vertexColour");
-
-	//now we can delete the Vertex Shader and Fragment Shader Programs
-	glDeleteShader(vertexShaderProgram);
-	glDeleteShader(fragmentShaderProgram);
-
-}*/
-
-/*void createTexture()
-{
-	std::string texturePath = ASSET_PATH + TEXTURE_PATH + "/texture.png";
-	texture = loadTextureFromFile(texturePath);
-}
-*/
 
 //The main method. This is the entry point for the project.
 int main(int argc, char* arg[]){
@@ -457,45 +370,11 @@ int main(int argc, char* arg[]){
 				running = false; //close the game loop.
 			}
 
-			/*switch (event.type){
-			case SDL_KEYDOWN:
-
-				switch (event.key.keysym.sym){
-				case SDLK_LEFT:
-					bottomLeftTriangleOneX = (bottomLeftTriangleOneX - (100.0f*deltatime));
-					bottomRightTriangleOneX = (bottomRightTriangleOneX - (100.0f*deltatime));
-					topLeftTriangleOneX = (topLeftTriangleOneX - (100.0f*deltatime));
-					break;
-				case SDLK_RIGHT:
-					bottomLeftTriangleOneX = (bottomLeftTriangleOneX + 0.1f);
-					bottomRightTriangleOneX = (bottomRightTriangleOneX + 0.1f);
-					topLeftTriangleOneX = (topLeftTriangleOneX + 0.1f);
-					break;
-				case SDLK_UP:
-					bottomLeftTriangleOneY = (bottomLeftTriangleOneY + 0.1f);
-					bottomRightTriangleOneY = (bottomRightTriangleOneY + 0.1f);
-					topLeftTriangleOneY = (topLeftTriangleOneY + 0.1f);
-					break;
-				case SDLK_DOWN:
-					bottomLeftTriangleOneY = (bottomLeftTriangleOneY - 0.1f);
-					bottomRightTriangleOneY = (bottomRightTriangleOneY - 0.1f);
-					topLeftTriangleOneY = (topLeftTriangleOneY - 0.1f);
-					break;
-					
-				}
-			}*/
-
-
 		}
 
 		update(); //Calls the update function
 		render(); // Calls the render function
-
-
-	}
-
-	
-
+		}
 	CleanUp();
 	return 0;
 }
