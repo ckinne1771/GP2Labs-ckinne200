@@ -12,6 +12,7 @@ GameObject::GameObject()
 	m_Mesh = NULL;
 	m_Material = NULL;
 	m_Camera = NULL;
+	m_Parent = NULL;
 
 	
 }
@@ -26,6 +27,11 @@ void GameObject::init(){
 	{
 		(*iter)->init();
 	}
+
+	for (auto iter = m_Children.begin(); iter != m_Children.end(); iter++)
+	{
+		(*iter)->init();
+	}
 }
 
 void GameObject::update(){
@@ -33,10 +39,19 @@ void GameObject::update(){
 	{
 		(*iter)->update();
 	}
+	for (auto iter = m_Children.begin(); iter != m_Children.end(); iter++)
+	{
+		(*iter)->update();
+	}
 }
 
 void GameObject::render(){
 	for (auto iter = m_Components.begin(); iter != m_Components.end(); iter++)
+	{
+		(*iter)->render();
+	}
+
+	for (auto iter = m_Children.begin(); iter != m_Children.end(); iter++)
 	{
 		(*iter)->render();
 	}
@@ -59,6 +74,7 @@ void GameObject::destroy(){
 		}
 	}
 	m_Components.clear();
+
 }
 
 const std::string& GameObject::getName()

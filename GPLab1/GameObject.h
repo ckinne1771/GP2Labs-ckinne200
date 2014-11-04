@@ -34,6 +34,11 @@ public:
 	Mesh *getMesh();
 	Material *getMaterial();
 	Camera * getCamera();
+	GameObject* getParent();
+	void setParent(GameObject* parent);
+	void addChild(GameObject* child);
+	int getChildCount();
+	GameObject* getChild(int index);
 protected:
 private:
 	std::string m_Name;
@@ -43,6 +48,9 @@ private:
 	Mesh *m_Mesh;
 	Material *m_Material;
 	Camera *m_Camera;
+
+	GameObject* m_Parent;
+	std::vector<GameObject*> m_Children;
 };
 
 #endif#
